@@ -1,16 +1,43 @@
 import React from 'react';
 import {ScrollView, StyleSheet,  Text, View, Image, ImageBackground, TextInput, Pressable} from 'react-native';
-import {Element3, Receipt21, Clock, Message, SearchNormal} from 'iconsax-react-native';
+import {Element3, Clock, Message, SearchNormal, ArrowRight3, Eye, ArrowSquareRight, People} from 'iconsax-react-native';
 import { fontType, colors } from './src/theme';
+
 
 export default function App() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>WOCO.</Text>
-        <Element3 color={colors.black()} variant="Linear" size={24} />
+      <People
+                  size={35}
+                  variant="Linear"
+                  color="#FF8A65"
+                />
+        <Text style={styles.title}>ACTIONARIUM</Text>
+        <Element3 color={colors.black()} variant="Center" size={24} />
       </View>
-<View style={searchBar.container}>
+      <View style={styles.listCategory}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View style={{...category.item, marginLeft: 24}}>
+            <Text style={{...category.title, color:"#ff5b5b"}}>
+            Popular Figures
+            </Text>
+          </View>
+          <View style={category.item}>
+            <Text style={category.title}>Rare Figures</Text>
+          </View>
+          <View style={category.item}>
+            <Text style={category.title}>New Releases</Text>
+          </View>
+          <View style={category.item}>
+            <Text style={category.title}>Custom Builds </Text>
+          </View>
+          <View style={category.item}>
+            <Text style={category.title}>Brands</Text>
+          </View>
+        </ScrollView>
+      </View>
+      <View style={searchBar.container}>
         <TextInput
             style={searchBar.input}
             placeholder="Search"
@@ -19,30 +46,6 @@ export default function App() {
             <SearchNormal size={20} color={colors.white()} />
           </Pressable>
       </View>
-      <View style={styles.listCategory}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={{...category.item, marginLeft: 24}}>
-            <Text style={{...category.title, color: colors.blue()}}>
-              Popular
-            </Text>
-          </View>
-          <View style={category.item}>
-            <Text style={category.title}>Latest</Text>
-          </View>
-          <View style={category.item}>
-            <Text style={category.title}>Technology</Text>
-          </View>
-          <View style={category.item}>
-            <Text style={category.title}>Fashion</Text>
-          </View>
-          <View style={category.item}>
-            <Text style={category.title}>Health</Text>
-          </View>
-          <View style={{...category.item, marginRight: 24}}>
-            <Text style={category.title}>Lifestyle</Text>
-          </View>
-        </ScrollView>
-      </View>
       <ListBlog />
     </View>
   );
@@ -50,7 +53,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white(),
+    backgroundColor: colors.black(),
   },
   header: {
     paddingHorizontal: 24,
@@ -65,7 +68,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontFamily: fontType['Pjs-ExtraBold'],
-    color: colors.black(),
+    color: colors.white(),
   },
   listCategory: {
     paddingVertical: 10,
@@ -81,7 +84,7 @@ const category = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 25,
     alignItems: 'center',
-    backgroundColor: colors.grey(0.08),
+    backgroundColor: colors.white(),
     marginHorizontal:5
   },
   title: {
@@ -93,26 +96,27 @@ const category = StyleSheet.create({
 });
 const searchBar = StyleSheet.create({
   container: {
-    marginHorizontal: 24,
+    marginHorizontal: 20,
     backgroundColor: colors.grey(0.03),
-    borderColor: colors.grey(0.2),
-    borderRadius: 10,
+    borderColor: "#FF5F1F",
+    borderRadius: 20,
     borderWidth: 1,
     flexDirection: 'row',
   },
   input: {
+    color : colors.white(),
     height: 40,
     padding: 10,
     width: '90%',
   },
   button: {
-    backgroundColor: colors.blue(),
+    backgroundColor: colors.black(),
     alignItems: 'center',
     justifyContent: 'center',
     height: 40,
     width: 40,
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
   },
 });
 const ListBlog = () => {
@@ -129,18 +133,18 @@ const ListBlog = () => {
               resizeMode="cover"
               imageStyle={{borderRadius: 15}}
               source={{
-                uri: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1744&q=80',
+                uri: 'https://i.pinimg.com/736x/ca/5c/9f/ca5c9facb5904915ed6f26b5dd506d44.jpg',
               }}>
               <View style={itemHorizontal.cardContent}>
                 <View style={itemHorizontal.cardInfo}>
                   <Text style={itemHorizontal.cardTitle}>
-                    Exploring the World of Electric Cars
+                  Top 10 Action Figures of 2025
                   </Text>
-                  <Text style={itemHorizontal.cardText}>Nov 10, 2023</Text>
+                  <Text style={itemHorizontal.cardText}>Jan 10, 2025</Text>
                 </View>
                 <View>
                   <View style={itemHorizontal.cardIcon}>
-                    <Receipt21 color={colors.white()} variant="Linear" size={20} />
+                    <ArrowSquareRight color= "#FF8A65" variant="Linear" size={20} />
                   </View>
                 </View>
               </View>
@@ -152,18 +156,18 @@ const ListBlog = () => {
               resizeMode="cover"
               imageStyle={{borderRadius: 15}}
               source={{
-                uri: 'https://images.unsplash.com/photo-1574770118700-4ed7dae3310e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80',
+                uri: 'https://i.pinimg.com/736x/49/6a/ea/496aea728a7b124bc72005058fe81644.jpg',
               }}>
               <View style={itemHorizontal.cardContent}>
                 <View style={itemHorizontal.cardInfo}>
                   <Text style={itemHorizontal.cardTitle}>
-                    Exploring the World of Electric Cars
+                    Exploring the World of Action Figures
                   </Text>
-                  <Text style={itemHorizontal.cardText}>Nov 10, 2023</Text>
+                  <Text style={itemHorizontal.cardText}>Jan 10, 2025</Text>
                 </View>
                 <View>
                   <View style={itemHorizontal.cardIcon}>
-                    <Receipt21 color={colors.white()} variant="Linear" size={20} />
+                  <ArrowSquareRight color= "#FF8A65" variant="Linear" size={20} />
                   </View>
                 </View>
               </View>
@@ -175,18 +179,18 @@ const ListBlog = () => {
               resizeMode="cover"
               imageStyle={{borderRadius: 15}}
               source={{
-                uri: 'https://images.unsplash.com/photo-1591293835940-934a7c4f2d9b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80',
+                uri: 'https://i.pinimg.com/736x/8d/9f/55/8d9f55ab2bc14b095e5f8deeed8f3fc0.jpg',
               }}>
               <View style={itemHorizontal.cardContent}>
                 <View style={itemHorizontal.cardInfo}>
                   <Text style={itemHorizontal.cardTitle}>
-                    Exploring the World of Electric Cars
+                    Exploring The Fans Favourite
                   </Text>
-                  <Text style={itemHorizontal.cardText}>Nov 10, 2023</Text>
+                  <Text style={itemHorizontal.cardText}>Jan 10, 2025</Text>
                 </View>
                 <View>
                   <View style={itemHorizontal.cardIcon}>
-                    <Receipt21 color={colors.white()} variant="Linear" size={20} />
+                  <ArrowSquareRight color= "#FF8A65" variant="Linear" size={20} />
                   </View>
                 </View>
               </View>
@@ -198,18 +202,18 @@ const ListBlog = () => {
               resizeMode="cover"
               imageStyle={{borderRadius: 15}}
               source={{
-                uri: 'https://images.unsplash.com/photo-1577048982768-5cb3e7ddfa23?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1738&q=80',
+                uri: 'https://i.pinimg.com/736x/8b/05/86/8b0586193a7c9379a3063bae39c20d08.jpg',
               }}>
               <View style={itemHorizontal.cardContent}>
                 <View style={itemHorizontal.cardInfo}>
                   <Text style={itemHorizontal.cardTitle}>
-                    Baking 101: Mastering the Art of Baking
+                  "Action Figures 101: Mastering the Art of Collecting"
                   </Text>
-                  <Text style={itemHorizontal.cardText}>Nov 10, 2023</Text>
+                  <Text style={itemHorizontal.cardText}>Jan 10, 2025</Text>
                 </View>
                 <View>
                   <View style={itemHorizontal.cardIcon}>
-                    <Receipt21 color={colors.white()} variant="Linear" size={20} />
+                    <ArrowSquareRight color= "#FF8A65" variant="Linear" size={20} />
                   </View>
                 </View>
               </View>
@@ -221,18 +225,18 @@ const ListBlog = () => {
               resizeMode="cover"
               imageStyle={{borderRadius: 15}}
               source={{
-                uri: 'https://images.unsplash.com/photo-1603048588665-791ca8aea617?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1520&q=80',
+                uri: 'https://i.pinimg.com/736x/8b/32/c7/8b32c71a82c88295adb66e5622fd4fa9.jpg',
               }}>
               <View style={itemHorizontal.cardContent}>
                 <View style={itemHorizontal.cardInfo}>
                   <Text style={itemHorizontal.cardTitle}>
-                    Rediscovering Vinyl: The Resurgence of Analog
+                  "Reviving Action Figures: The Comeback of Classic Collectibles"
                   </Text>
-                  <Text style={itemHorizontal.cardText}>Nov 10, 2023</Text>
+                  <Text style={itemHorizontal.cardText}>Jan 10, 2025</Text>
                 </View>
                 <View>
                   <View style={itemHorizontal.cardIcon}>
-                    <Receipt21 color={colors.white()} variant="Linear" size={20} />
+                    <ArrowSquareRight color= "#FF8A65" variant="Linear" size={20} />
                   </View>
                 </View>
               </View>
@@ -244,7 +248,7 @@ const ListBlog = () => {
             <Image
               style={itemVertical.cardImage}
               source={{
-                uri: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80',
+                uri: 'https://i.pinimg.com/736x/70/52/1d/70521ddc7e8f2ab3b21fb6a2e61d1fa4.jpg',
               }}
             />
             <View style={itemVertical.cardContent}>
@@ -254,13 +258,13 @@ const ListBlog = () => {
                   justifyContent: 'space-between',
                 }}>
                 <View style={{gap: 5, width: '70%'}}>
-                  <Text style={itemVertical.cardCategory}>Technology</Text>
+                  <Text style={itemVertical.cardCategory}>Action Figures </Text>
                   <Text style={itemVertical.cardTitle}>
-                    How to use Redux in ReactJS
+                  Tips for Displaying and Storing Your Collectibles
                   </Text>
                 </View>
-                <Receipt21
-                  color={colors.grey(0.6)}
+                <ArrowRight3
+                  color="#FF8A65"
                   variant="Linear"
                   size={20}
                 />
@@ -269,9 +273,9 @@ const ListBlog = () => {
                 <Clock
                   size={10}
                   variant="Linear"
-                  color={colors.grey(0.6)}
+                  color="#FF8A65"
                 />
-                <Text style={itemVertical.cardText}>Jul 25, 2023</Text>
+                <Text style={itemVertical.cardText}>Jan 25, 2025</Text>
                 <Message
                   size={10}
                   variant="Linear"
@@ -285,7 +289,7 @@ const ListBlog = () => {
             <Image
               style={itemVertical.cardImage}
               source={{
-                uri: 'https://images.unsplash.com/photo-1477013743164-ffc3a5e556da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80',
+                uri: 'https://i.pinimg.com/736x/cf/f0/75/cff075b0e466a2be9b7e361c2ddf9c16.jpg',
               }}
             />
             <View style={itemVertical.cardContent}>
@@ -295,30 +299,30 @@ const ListBlog = () => {
                   justifyContent: 'space-between',
                 }}>
                 <View style={{gap: 5, width: '70%'}}>
-                  <Text style={itemVertical.cardCategory}>Technology</Text>
+                  <Text style={itemVertical.cardCategory}>Action Figures</Text>
                   <Text style={itemVertical.cardTitle}>
-                    Boosting Traffic with SEO
+                  A Guide to Customizing Your Favorite Collectibles
                   </Text>
                 </View>
-                <Receipt21
-                  color={colors.grey(0.6)}
+                 <ArrowRight3
+                  color="#FF8A65"
                   variant="Linear"
                   size={20}
                 />
               </View>
               <View style={itemVertical.cardInfo}>
-                <Clock
+                 <Clock
                   size={10}
                   variant="Linear"
-                  color={colors.grey(0.6)}
+                  color="#FF8A65"
                 />
-                <Text style={itemVertical.cardText}>Jul 25, 2023</Text>
-                <Message
+                <Text style={itemVertical.cardText}>Feb 25, 2025</Text>
+                <Eye
                   size={10}
                   variant="Linear"
-                  color={colors.grey(0.6)}
+                  color="#FF8A65"
                 />
-                <Text style={itemVertical.cardText}>89</Text>
+                <Text style={itemVertical.cardText}>100</Text>
               </View>
             </View>
           </View>
@@ -326,7 +330,7 @@ const ListBlog = () => {
             <Image
               style={itemVertical.cardImage}
               source={{
-                uri: 'https://images.unsplash.com/photo-1492683962492-deef0ec456c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1756&q=80',
+                uri: 'https://i.pinimg.com/736x/58/4f/23/584f2318d1696bb5acd6a07aac6bef32.jpg',
               }}
             />
             <View style={itemVertical.cardContent}>
@@ -336,30 +340,30 @@ const ListBlog = () => {
                   justifyContent: 'space-between',
                 }}>
                 <View style={{gap: 5, width: '70%'}}>
-                  <Text style={itemVertical.cardCategory}>Food</Text>
+                  <Text style={itemVertical.cardCategory}>Rare Figures</Text>
                   <Text style={itemVertical.cardTitle}>
-                    Culinary Adventures: Exploring Exotic Flavors
+                    Checks Out the Rarest Action Figure on Display
                   </Text>
                 </View>
-                <Receipt21
-                  color={colors.grey(0.6)}
+                 <ArrowRight3
+                  color="#FF8A65"
                   variant="Linear"
                   size={20}
                 />
               </View>
               <View style={itemVertical.cardInfo}>
-                <Clock
+                 <Clock
                   size={10}
                   variant="Linear"
-                  color={colors.grey(0.6)}
+                  color="#FF8A65"
                 />
-                <Text style={itemVertical.cardText}>Jul 25, 2023</Text>
-                <Message
+                <Text style={itemVertical.cardText}>Feb 25, 2025</Text>
+                <Eye
                   size={10}
                   variant="Linear"
-                  color={colors.grey(0.6)}
+                  color="#FF8A65"
                 />
-                <Text style={itemVertical.cardText}>89</Text>
+                <Text style={itemVertical.cardText}>150</Text>
               </View>
             </View>
           </View>
@@ -367,7 +371,7 @@ const ListBlog = () => {
             <Image
               style={itemVertical.cardImage}
               source={{
-                uri: 'https://images.unsplash.com/photo-1527090526205-beaac8dc3c62?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80',
+                uri: 'https://i.pinimg.com/736x/15/85/ac/1585acd4abf298cdfc22ca5179a135bd.jpg',
               }}
             />
             <View style={itemVertical.cardContent}>
@@ -377,28 +381,28 @@ const ListBlog = () => {
                   justifyContent: 'space-between',
                 }}>
                 <View style={{gap: 5, width: '70%'}}>
-                  <Text style={itemVertical.cardCategory}>Fashion</Text>
-                  <Text style={itemVertical.cardTitle}>Sneaker Culture</Text>
+                  <Text style={itemVertical.cardCategory}>Action Figures</Text>
+                  <Text style={itemVertical.cardTitle}>The Rise of Collectible Action Figure Culture</Text>
                 </View>
-                <Receipt21
-                  color={colors.grey(0.6)}
+                 <ArrowRight3
+                  color="#FF8A65"
                   variant="Linear"
                   size={20}
                 />
               </View>
               <View style={itemVertical.cardInfo}>
-                <Clock
+                 <Clock
                   size={10}
                   variant="Linear"
-                  color={colors.grey(0.6)}
+                  color="#FF8A65"
                 />
-                <Text style={itemVertical.cardText}>Jul 25, 2023</Text>
-                <Message
+                <Text style={itemVertical.cardText}>Feb 25, 2025</Text>
+                <Eye
                   size={10}
                   variant="Linear"
-                  color={colors.grey(0.6)}
+                  color="#FF8A65"
                 />
-                <Text style={itemVertical.cardText}>89</Text>
+                <Text style={itemVertical.cardText}>111</Text>
               </View>
             </View>
           </View>
@@ -406,7 +410,7 @@ const ListBlog = () => {
             <Image
               style={itemVertical.cardImage}
               source={{
-                uri: 'https://images.unsplash.com/photo-1602192509154-0b900ee1f851?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80',
+                uri: 'https://i.pinimg.com/736x/4c/f9/2c/4cf92ca00abe4eba764bc233bd07f63f.jpg',
               }}
             />
             <View style={itemVertical.cardContent}>
@@ -416,30 +420,30 @@ const ListBlog = () => {
                   justifyContent: 'space-between',
                 }}>
                 <View style={{gap: 5, width: '70%'}}>
-                  <Text style={itemVertical.cardCategory}>Lifestyle</Text>
+                  <Text style={itemVertical.cardCategory}>New Release</Text>
                   <Text style={itemVertical.cardTitle}>
-                    Balancing Work and Well-being
+                    The Best Action Figures New Releases of 2025
                   </Text>
                 </View>
-                <Receipt21
-                  color={colors.grey(0.6)}
+                 <ArrowRight3
+                  color="#FF8A65"
                   variant="Linear"
                   size={20}
                 />
               </View>
               <View style={itemVertical.cardInfo}>
-                <Clock
+                 <Clock
                   size={10}
                   variant="Linear"
-                  color={colors.grey(0.6)}
+                  color="#FF8A65"
                 />
-                <Text style={itemVertical.cardText}>Jul 25, 2023</Text>
-                <Message
+                <Text style={itemVertical.cardText}>Feb 25, 2025</Text>
+                <Eye
                   size={10}
                   variant="Linear"
-                  color={colors.grey(0.6)}
+                  color="#FF8A65"
                 />
-                <Text style={itemVertical.cardText}>89</Text>
+                <Text style={itemVertical.cardText}>125</Text>
               </View>
             </View>
           </View>
@@ -447,7 +451,7 @@ const ListBlog = () => {
             <Image
               style={itemVertical.cardImage}
               source={{
-                uri: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80',
+                uri: 'https://i.pinimg.com/736x/01/17/21/0117214c93a596f41a2c52a0de755ad5.jpg',
               }}
             />
             <View style={itemVertical.cardContent}>
@@ -457,30 +461,30 @@ const ListBlog = () => {
                   justifyContent: 'space-between',
                 }}>
                 <View style={{gap: 5, width: '70%'}}>
-                  <Text style={itemVertical.cardCategory}>Health</Text>
+                  <Text style={itemVertical.cardCategory}>Custom Builds</Text>
                   <Text style={itemVertical.cardTitle}>
-                    Home Fitness Revolution
+                    Top 10 Best Custom Builds of 2025
                   </Text>
                 </View>
-                <Receipt21
-                  color={colors.grey(0.6)}
+                 <ArrowRight3
+                  color="#FF8A65"
                   variant="Linear"
                   size={20}
                 />
               </View>
               <View style={itemVertical.cardInfo}>
-                <Clock
+                 <Clock
                   size={10}
                   variant="Linear"
-                  color={colors.grey(0.6)}
+                  color="#FF8A65"
                 />
-                <Text style={itemVertical.cardText}>Jul 25, 2023</Text>
-                <Message
+                <Text style={itemVertical.cardText}>Feb 25, 2025</Text>
+                <Eye
                   size={10}
                   variant="Linear"
-                  color={colors.grey(0.6)}
+                  color="#FF8A65"
                 />
-                <Text style={itemVertical.cardText}>89</Text>
+                <Text style={itemVertical.cardText}>99</Text>
               </View>
             </View>
           </View>
@@ -488,7 +492,7 @@ const ListBlog = () => {
             <Image
               style={itemVertical.cardImage}
               source={{
-                uri: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80',
+                uri: 'https://upload.wikimedia.org/wikipedia/it/6/6d/Logo_Revoltech.jpg',
               }}
             />
             <View style={itemVertical.cardContent}>
@@ -498,24 +502,24 @@ const ListBlog = () => {
                   justifyContent: 'space-between',
                 }}>
                 <View style={{gap: 5, width: '70%'}}>
-                  <Text style={itemVertical.cardCategory}>Fashion</Text>
+                  <Text style={itemVertical.cardCategory}>Brands</Text>
                   <Text style={itemVertical.cardTitle}>
-                    Intersection of Fashion
+                    Top 10 Action Figures Best Brands of 2025
                   </Text>
                 </View>
-                <Receipt21
-                  color={colors.grey(0.6)}
+                 <ArrowRight3
+                  color="#FF8A65"
                   variant="Linear"
                   size={20}
                 />
               </View>
               <View style={itemVertical.cardInfo}>
-                <Clock
+                 <Clock
                   size={10}
                   variant="Linear"
-                  color={colors.grey(0.6)}
+                  color="#FF8A65"
                 />
-                <Text style={itemVertical.cardText}>Jul 25, 2023</Text>
+                <Text style={itemVertical.cardText}>Feb 25, 2025</Text>
                 <Message
                   size={10}
                   variant="Linear"
@@ -542,19 +546,19 @@ const itemVertical = StyleSheet.create({
     borderRadius: 10,
   },
   cardCategory: {
-    color: colors.blue(),
+    color: "#E43C38",
     fontSize: 10,
     fontFamily: fontType['Pjs-SemiBold'],
   },
   cardTitle: {
     fontSize: 14,
     fontFamily: fontType['Pjs-Bold'],
-    color: colors.black(),
+    color: colors.white(),
   },
   cardText: {
     fontSize: 10,
     fontFamily: fontType['Pjs-Medium'],
-    color: colors.blue(0.6),
+    color: "#ff0303",
   },
   cardImage: {
     width: 94,
@@ -582,6 +586,7 @@ const itemHorizontal = StyleSheet.create({
   },
   cardImage: {
     width: '100%',
+    alignContent: 'flex-start',
     height: 200,
     borderRadius: 5,
   },
@@ -607,9 +612,6 @@ const itemHorizontal = StyleSheet.create({
     fontFamily: fontType['Pjs-Medium'],
   },
   cardIcon: {
-    backgroundColor: colors.white(0.33),
-    padding: 5,
-    borderColor: colors.white(),
     borderWidth: 0.5,
     borderRadius: 5,
   },
