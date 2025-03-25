@@ -53,6 +53,9 @@ export default function App() {
         <Text style={styles.title}>ACTIONARIUM</Text>
         <Element3 color={colors.black()} variant="Center" size={24} />
       </View>
+      <View style={styles.listCategory}>
+        <FlatListCategory />
+      </View>
       <View style={searchBar.container}>
         <TextInput
             style={searchBar.input}
@@ -61,9 +64,6 @@ export default function App() {
           <Pressable style={searchBar.button}>
             <SearchNormal size={20} color={colors.white()} />
           </Pressable>
-      </View>
-      <View style={styles.listCategory}>
-        <FlatListCategory />
       </View>
       <ListBlog />
     </View>
@@ -118,7 +118,7 @@ const category = StyleSheet.create({
 });
 const searchBar = StyleSheet.create({
   container: {
-    marginHorizontal: 20,
+    marginHorizontal: 10,
     backgroundColor: colors.grey(0.03),
     borderColor: "#FF5F1F",
     borderRadius: 20,
@@ -132,7 +132,7 @@ const searchBar = StyleSheet.create({
     width: '90%',
   },
   button: {
-    backgroundColor: colors.black(),
+    backgroundColor: colors.black(0.005),
     alignItems: 'center',
     justifyContent: 'center',
     height: 40,
@@ -157,3 +157,5 @@ const ListBlog = () => {
     </ScrollView>
   );
 };
+
+

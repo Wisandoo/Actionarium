@@ -1,4 +1,4 @@
-  import { StyleSheet, Text, View, FlatList, TouchableOpacity, } from 'react-native';
+  import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
   import React, {useState} from 'react';
   import {ArrowRight3} from 'iconsax-react-native';
   import FastImage from '@d11/react-native-fast-image';
@@ -70,8 +70,9 @@
     },
     cardImage: {
       width: '100%',
+      alignContent: 'flex-start',
       height: 200,
-      borderRadius: 15,
+      borderRadius: 5,
     },
     cardContent: {
       flexDirection: 'row',
@@ -95,7 +96,7 @@
       fontFamily: fontType['Pjs-Medium'],
     },
     cardIcon: {
-      pborderWidth: 0.5,
+      borderWidth: 0.5,
       borderRadius: 5,
     },
   });

@@ -51,7 +51,7 @@ const ItemSmall = ({item}) => {
     listCard: {
       paddingHorizontal: 24,
       paddingVertical: 10,
-      gap: 15,
+      gap: 5,
     },
     cardItem: {
       backgroundColor: colors.blue(0.03),
@@ -59,7 +59,7 @@ const ItemSmall = ({item}) => {
       borderRadius: 10,
     },
     cardCategory: {
-      color: "#ff5b5b",
+      color: "#E43C38",
       fontSize: 10,
       fontFamily: fontType['Pjs-SemiBold'],
     },
