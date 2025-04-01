@@ -6,6 +6,16 @@ export const CategoryList = [
     { id: 5, CategoryName: 'Brands' },
   ];
   
+export const ProfileData = {
+    profilePict:
+      'https://i.pinimg.com/736x/3a/08/82/3a0882b89e140f2109b30a1a78ef9f1b.jpg',
+    name: 'Wisando Berlian',
+    createdAt: '14 Aug, 2024',
+    blogPosted: 12,
+    following: 15,
+    follower: 15000,
+  };
+
   export const BlogList = [
     {
         id: 1,
@@ -96,6 +106,59 @@ export const CategoryList = [
         image: 'https://upload.wikimedia.org/wikipedia/it/6/6d/Logo_Revoltech.jpg',
         date: 'Jun 25, 2025',
         views: 160,
+      },
+  ];
+
+  export const PictureList = [
+    {
+        id: 1,
+        image: 'https://i.pinimg.com/736x/e8/60/e0/e860e0e6c488011dc6f89da608194b13.jpg',
+      },
+      {
+        id: 2,
+        image: 'https://i.pinimg.com/736x/7c/db/36/7cdb3625f42af2ced6482cfa16909c7a.jpg',
+        
+      },
+      {
+        id: 3,
+        image: 'https://i.pinimg.com/736x/6f/33/ea/6f33ea2e36acf2473e17b64e7bf6bc7d.jpg',
+       
+      },
+      {
+        id: 4,
+        image: 'https://i.pinimg.com/736x/1e/15/28/1e15288b1379a0a6a1b56b6d8c4d45a3.jpg',
+      },
+      {
+        id: 5,
+         image: 'https://i.pinimg.com/736x/34/7b/f5/347bf567593680ee9ebe071be4a48089.jpg',     
+      },
+      {
+        id: 6,
+        image: 'https://i.pinimg.com/736x/fa/30/ce/fa30ce1ae45cd1616d4efbb2d7c1f957.jpg',
+      },
+      {
+        id: 7,
+        image: 'https://i.pinimg.com/736x/2d/96/cd/2d96cd470b6227a099b9c44ca1d5c723.jpg',
+      },
+      {
+        id: 8,
+        image: 'https://i.pinimg.com/736x/e6/ab/04/e6ab048fae081e2b9faf6b6ff33d32ce.jpg',
+      },
+      {
+        id: 9,
+        image: 'https://i.pinimg.com/736x/0d/e3/25/0de325a2e430b25dd5fc84a8af7a970c.jpg',
+      },
+      {
+        id: 10,
+        image: 'https://i.pinimg.com/736x/8b/f4/07/8bf4071a8d67ee809a6db93f0ec456d5.jpg',
+      },
+      {
+        id: 11,
+        image: 'https://i.pinimg.com/736x/ee/22/d5/ee22d54efd0d2633f8e418f157ce8783.jpg',
+      },
+      {
+        id: 12,
+        image: 'https://i.pinimg.com/736x/47/35/17/473517c1d68e48d5f53c33ead00d3f18.jpg',
       },
   ];
     

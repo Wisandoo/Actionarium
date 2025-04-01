@@ -3,6 +3,12 @@ const colors = {
     blue: (opacity = 1) => `rgba(53, 88, 225, ${opacity})`,
     white: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
     black: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    red : (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
+    green : (opacity = 1) => `rgba(0, 255, 0, ${opacity})`,
+    yellow : (opacity = 1) => `rgba(255, 255, 0, ${opacity})`,
+    purple : (opacity = 1) => `rgba(255, 0, 255, ${opacity})`,
+    orange : (opacity = 1) => `rgba(255, 100, 0, ${opacity})`,
+    LightBlue : (opacity = 1) => `rgba(0, 200, 255, ${opacity})`,
     darkModeBlack: (opacity = 1) => `rgba(27, 27, 27, ${opacity})`,
     darkModeBlue: (opacity = 1) => `rgba(146, 156, 241, ${opacity})`,
 }
