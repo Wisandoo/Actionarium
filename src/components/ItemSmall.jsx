@@ -1,12 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import FastImage from '@d11/react-native-fast-image';
 import { ArrowRight3, Clock, Eye} from 'iconsax-react-native';
 import { fontType, colors } from '../theme';
+import {useNavigation} from '@react-navigation/native';
 
 const ItemSmall = ({item}) => {
     return (
-      <View style={styles.cardItem}>
+      <TouchableOpacity style={styles.cardItem}>
         <FastImage
           style={styles.cardImage}
           source={{
@@ -43,7 +44,7 @@ const ItemSmall = ({item}) => {
             <Text style={styles.cardText}>{item.views}</Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
   export default ItemSmall;

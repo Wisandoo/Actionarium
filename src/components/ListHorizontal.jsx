@@ -3,10 +3,12 @@
   import {ArrowRight3} from 'iconsax-react-native';
   import FastImage from '@d11/react-native-fast-image';
   import {fontType, colors} from '../theme';
+  import {useNavigation} from '@react-navigation/native';
   
   const ItemHorizontal = ({item, variant, onPress}) => {
+    const navigation = useNavigation();
     return (
-      <View style={itemHorizontal.cardItem}>
+      <TouchableOpacity  style={itemHorizontal.cardItem}>
         <FastImage
           style={itemHorizontal.cardImage}
           source={{
@@ -29,7 +31,7 @@
             </View>
           </View>
         </FastImage>
-      </View>
+      </TouchableOpacity>
     );
   };
   const ListHorizontal = ({data}) => {

@@ -1,9 +1,10 @@
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
-import { Setting, Verify } from 'iconsax-react-native';
+import { Setting, Edit } from 'iconsax-react-native';
 import React from 'react';
 import FastImage from '@d11/react-native-fast-image';
 import { ProfileData,  PictureList } from '../../data';
 import { fontType, colors } from '../../theme';
+import {useNavigation} from '@react-navigation/native';
 
 const formatNumber = number => {
   if (number >= 1_000_000_000) return (number / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
@@ -14,6 +15,7 @@ const formatNumber = number => {
 
 
 const Profile = () => {
+  const navigation = useNavigation();
     return (
       <View style={styles.container}>
         {/* Header */}
@@ -74,7 +76,11 @@ const Profile = () => {
             contentContainerStyle={styles.blogSection}
           />
         </ScrollView>
-
+        <TouchableOpacity
+        style={styles.floatingButton}
+        onPress={() => navigation.navigate('AddBlog')}>
+        <Edit color={colors.white()} variant="Linear" size={20} />
+      </TouchableOpacity>
         
       </View>
     );
@@ -99,5 +105,23 @@ const Profile = () => {
     blogSection: { paddingTop: 15, paddingHorizontal: 5 },
     imageContainer: { flex: 1, margin: 5 },
     image: { width: '100%', aspectRatio: 1, borderRadius: 10 },
+    floatingButton: {
+      backgroundColor: colors.orange(),
+      padding: 15,
+      position: 'absolute',
+      bottom: 24,
+      right: 24,
+      borderRadius: 10,
+      shadowColor: colors.blue(),
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowOpacity: 0.3,
+      shadowRadius: 4.65,
+  
+      elevation: 8,
+    },
+  
   });
   
