@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
-import { Setting, Edit } from 'iconsax-react-native';
-import React from 'react';
+import React, { useState, useCallback, useEffect} from 'react';
+import { Setting, Edit, Add } from 'iconsax-react-native';
 import FastImage from '@d11/react-native-fast-image';
 import { ProfileData, PictureList } from '../../data';
 import { fontType, colors } from '../../theme';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 const formatNumber = number => {
   if (number >= 1_000_000_000) return (number / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
@@ -61,30 +62,71 @@ const Profile = () => {
     </>
   );
 
+  // status untuk menandakan apakah terjadi loading/tidak
+  const [loading, setLoading] = useState(true);
+  // state blod data untuk menyimpan list (array) dari blog
+  const [blogData, setBlogData] = useState([]);
+  // status untuk menyimpan status refreshing
+  const [refreshing, setRefreshing] = useState(false);
+  
+  const getDataBlog = async () => {
+    try {
+      // ambil data dari API dengan metode GET
+      const response = await axios.get(
+        'https://682c9fb14fae188947534d0a.mockapi.io/api/Post',
+      );
+      // atur state blogData sesuai dengan data yang
+      // di dapatkan dari API
+      setBlogData(response.data);
+      // atur loading menjadi false
+      setLoading(false)
+    } catch (error) {
+        console.error(error);
+    }
+  };
+
+  useFocusEffect(useCallback(() => {
+    getDataBlog();    
+  }));
+
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={PictureList.slice(0, 12)}
+        data={blogData}
         keyExtractor={(_, index) => index.toString()}
         numColumns={3}
         ListHeaderComponent={renderHeader}
         columnWrapperStyle={{ justifyContent: 'space-between' }}
         renderItem={({ item }) => (
-          <View style={styles.imageContainer}>
-            <FastImage
-              source={{ uri: item.image }}
-              style={styles.image}
-              resizeMode={FastImage.resizeMode.cover}
-            />
-          </View>
-        )}
+        <TouchableOpacity
+          style={styles.imageContainer}
+          activeOpacity={0.8}
+          onPress={() =>
+          navigation.navigate('PostDetail', {
+            image: item.image,
+            caption: item.caption || '', // pastikan data ada
+            tags: item.tags || [], // bisa array kosong jika tidak ada
+            postId: item.id
+          })
+}
+
+        >
+          <FastImage
+            source={{ uri: item.image }}
+            style={styles.image}
+            resizeMode={FastImage.resizeMode.cover}
+          />
+        </TouchableOpacity>
+      )}
+
         contentContainerStyle={styles.scrollContainer}
       />
 
       <TouchableOpacity
         style={styles.floatingButton}
-        onPress={() => navigation.navigate('AddBlog')}>
-        <Edit color={colors.white()} variant="Linear" size={20} />
+        onPress={() => navigation.navigate('CreatePost')}>
+        <Add color={colors.white()} variant="Linear" size={20} />
       </TouchableOpacity>
     </View>
   );

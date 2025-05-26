@@ -1,183 +1,241 @@
-import {StyleSheet, Text, View, ScrollView, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
-import {ArrowLeft, Like1, Receipt21, Message, Share, More} from 'iconsax-react-native';
-import {useNavigation} from '@react-navigation/native';
-import {BlogList} from '../../data';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { getFirestore, doc, onSnapshot, collection, query, where } from '@react-native-firebase/firestore';
 import FastImage from '@d11/react-native-fast-image';
-import { fontType, colors } from '../../theme';
-const formatNumber = number => {
-  if (number >= 1000000000) {
-    return (number / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
-  }
-  if (number >= 1000000) {
-    return (number / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-  }
-  if (number >= 1000) {
-    return (number / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-  }
-  return number.toString();
-};
-const Details = ({route}) => {
-  const {blogId} = route.params;
-  const [iconStates, setIconStates] = useState({
+import ActionSheet from 'react-native-actions-sheet';
+import { colors, fontType } from '../../theme';
+import axios from 'axios';
+
+const ProfileDetail = ({ route }) => {
+  const { userId } = route.params;
+ const [iconStates, setIconStates] = useState({
     liked: {variant: 'Linear', color: colors.grey(0.6)},
     bookmarked: {variant: 'Linear', color: colors.grey(0.6)},
-  });
-  const selectedBlog = BlogList.find(blog => blog.id === blogId);
-  const navigation = useNavigation();
-  const toggleIcon = iconName => {
-    setIconStates(prevStates => ({
-      ...prevStates,
-      [iconName]: {
-        variant: prevStates[iconName].variant === 'Linear' ? 'Bold' : 'Linear',
-        color:
-          prevStates[iconName].variant === 'Linear'
-            ? colors.blue()
-            : colors.grey(0.6),
-      },
-    }));
+});
+
+const [selectedBlog, setSelectedBlog] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const actionSheetRef = useRef(null);
+
+
+  useEffect(() => {
+    const db = getFirestore();
+
+    // Ambil data user
+    const unsubUser = onSnapshot(doc(db, 'users', userId), (snap) => {
+      if (snap.exists()) setUser(snap.data());
+    });
+
+    // Ambil post berdasarkan userId
+    const q = query(collection(db, 'posts'), where('userId', '==', userId));
+    const unsubPosts = onSnapshot(q, (snap) => {
+      const userPosts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setPosts(userPosts);
+    });
+
+    setLoading(false);
+    return () => {
+      unsubUser();
+      unsubPosts();
+    };
+  }, [userId]);
+
+  const openActionSheet = () => actionSheetRef.current?.show();
+  const closeActionSheet = () => actionSheetRef.current?.hide();
+
+  useFocusEffect(
+    useCallback(() => {
+      getBlogById();
+    }, [ActionariumId])
+  );
+
+  const getBlogById = async () => {
+    try {
+      // ambil data blog berdasarkan spesifik ID dengan metode GET
+      const response = await axios.get(
+        `https://682c9fb14fae188947534d0a.mockapi.io/api/Post/${ActionariumId}`,
+      );
+      // atur state blog berdasarkan response dari API
+      setSelectedBlog(response.data);
+      setLoading(false);
+    } catch (error) {
+      Alert.alert('error', `${error.Message}`);
+    }
   };
+
+  const navigateEdit = () => {
+    navigation.navigate('EditBlog', {ActionariumId});
+    closeActionSheet()
+  }
+  const handleDelete = async () => {
+    setLoading(true);
+    try {
+      // hapus data blog dengan spesifik ID dengan metode DELETE
+      const response = await axios.delete(`https://682c9fb14fae188947534d0a.mockapi.io/api/Post/${ActionariumId}`);
+      if (response.status == 200) {
+        closeActionSheet();
+        navigation.goBack();
+      }
+    } catch (error) {
+      Alert.alert('Gagal Menghapus Post', `${error.Message}`);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const renderItem = ({ item }) => (
+  <View style={styles.postContainer}>
+    <FastImage source={{ uri: item.image }} style={styles.postImage} />
+    <TouchableOpacity
+      style={styles.menuButton}
+      onPress={() => {
+        setSelectedBlog(item); // Set data blog yang dipilih
+        openActionSheet(); // Tampilkan Action Sheet
+      }}
+    >
+      <Text style={styles.menuIcon}>⋮</Text> {/* Ikon tiga titik */}
+    </TouchableOpacity>
+  </View>
+);
+
+
+  if (loading || !user) {
+    return <ActivityIndicator size="large" color={colors.blue()} style={{ flex: 1 }} />;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <ArrowLeft
-            color={colors.grey(0.6)}
-            variant="Linear"
-            size={24}
-          />
-        </TouchableOpacity>
-        <View style={{flexDirection: 'row', justifyContent: 'center', gap: 20}}>
-          <Share color={colors.grey(0.6)} variant="Linear" size={24} />
-          <More
-            color={colors.grey(0.6)}
-            variant="Linear"
-            style={{transform: [{rotate: '90deg'}]}}
-          />
+        <Image source={{ uri: user.profilePicture }} style={styles.avatar} />
+        <Text style={styles.name}>{user.name}</Text>
+        <Text style={styles.sub}>Member since {user.createdAt}</Text>
+        <View style={styles.stats}>
+          <Text style={styles.statText}>{posts.length} Posted</Text>
+          <Text style={styles.statText}>{user.following} Following</Text>
+          <Text style={styles.statText}>{user.followers} Followers</Text>
         </View>
+        <TouchableOpacity style={styles.editButton} onPress={openActionSheet}>
+          <Text style={styles.editText}>Edit Profile</Text>
+        </TouchableOpacity>
+
       </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingHorizontal: 24,
-          paddingTop: 62,
-          paddingBottom: 54,
-        }}>
-        <FastImage
-          style={styles.image}
-          source={{
-            uri: selectedBlog.image,
-            headers: {Authorization: 'someAuthToken'},
-            priority: FastImage.priority.high,
-          }}
-          resizeMode={FastImage.resizeMode.cover}>
-        </FastImage>
-        <View
+
+      <FlatList
+        data={posts}
+        numColumns={3}
+        keyExtractor={item => item.id}
+        renderItem={renderItem}
+        contentContainerStyle={styles.postList}
+      />
+
+      <ActionSheet ref={actionSheetRef}>
+        ref={actionSheetRef}
+        containerStyle={{
+          borderTopLeftRadius: 25,
+          borderTopRightRadius: 25,
+        }}
+        indicatorStyle={{
+          width: 100,
+        }}
+        defaultOverlayOpacity={0.3}
+        <TouchableOpacity
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 15,
-          }}>
-          <Text style={styles.category}>{selectedBlog.category}</Text>
-          <Text style={styles.date}>{selectedBlog.createdAt}</Text>
-        </View>
-        <Text style={styles.title}>{selectedBlog.title}</Text>
-        <Text style={styles.content}>{selectedBlog.content}</Text>
-      </ScrollView>
-      <View style={styles.bottomBar}>
-        <View style={{flexDirection:'row', gap:5, alignItems:'center'}}>
-          <TouchableOpacity onPress={() => toggleIcon('liked')}>
-            <Like1
-              color={iconStates.liked.color}
-              variant={iconStates.liked.variant}
-              size={24}
-            />
-          </TouchableOpacity>
-          <Text style={styles.info}>
-            {formatNumber(selectedBlog.totalLikes)}
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingVertical: 15,
+          }}
+          onPress={navigateEdit}
+          >
+          <Text
+            style={{
+              fontFamily: fontType['Pjs-Medium'],
+              color: colors.black(),
+              fontSize: 18,
+            }}>
+            Edit
           </Text>
-        </View>
-        <View style={{flexDirection:'row', gap:5, alignItems:'center'}}>
-        <Message color={colors.grey(0.6)} variant="Linear" size={24} />
-        <Text style={styles.info}>
-          {formatNumber(selectedBlog.totalComments)}
-        </Text>
-        </View>
-        <TouchableOpacity onPress={() => toggleIcon('bookmarked')}>
-          <Receipt21
-            color={iconStates.bookmarked.color}
-            variant={iconStates.bookmarked.variant}
-            size={24}
-          />
         </TouchableOpacity>
-      </View>
+        <TouchableOpacity
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingVertical: 15,
+          }}
+          onPress={handleDelete}>
+          <Text
+            style={{
+              fontFamily: fontType['Pjs-Medium'],
+              color: colors.black(),
+              fontSize: 18,
+            }}>
+            Delete
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingVertical: 15,
+          }}
+          onPress={closeActionSheet}>
+          <Text
+            style={{
+              fontFamily: fontType['Pjs-Medium'],
+              color: 'red',
+              fontSize: 18,
+            }}>
+            Cancel
+          </Text>
+        </TouchableOpacity>
+
+      </ActionSheet>
     </View>
   );
 };
-export default Details;
+
+export default ProfileDetail;
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.white(),
-  },
-  header: {
-    paddingHorizontal: 24,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 52,
-    paddingTop: 8,
-    paddingBottom: 4,
-    position: 'absolute',
-    zIndex: 1000,
-    top: 0,
-    right: 0,
-    left: 0,
-    backgroundColor: colors.white(),
-  },
-  bottomBar: {
-    position: 'absolute',
-    zIndex: 1000,
-    backgroundColor: colors.white(),
-    paddingVertical: 14,
-    paddingHorizontal: 60,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  image: {
-    height: 200,
-    width: 'auto',
-    borderRadius: 15,
-  },
-  info: {
-    color: colors.grey(0.6),
-    fontFamily: fontType['Pjs-SemiBold'],
-    fontSize: 12,
-  },
-  category: {
-    color: colors.blue(),
-    fontFamily: fontType['Pjs-SemiBold'],
-    fontSize: 12,
-  },
-  date: {
-    color: colors.grey(0.6),
-    fontFamily: fontType['Pjs-Medium'],
-    fontSize: 10,
-  },
-  title: {
-    fontSize: 16,
-    fontFamily: fontType['Pjs-Bold'],
-    color: colors.black(),
+  container: { flex: 1, backgroundColor: colors.black() },
+  header: { alignItems: 'center', paddingVertical: 20 },
+  avatar: { width: 100, height: 100, borderRadius: 50 },
+  name: { fontSize: 18, fontFamily: fontType['Pjs-Bold'], color: 'white', marginTop: 8 },
+  sub: { fontSize: 12, color: 'gray', marginBottom: 10 },
+  stats: { flexDirection: 'row', gap: 20, marginVertical: 10 },
+  statText: { color: 'white', fontSize: 12 },
+  editButton: {
+    backgroundColor: colors.orange(),
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
     marginTop: 10,
   },
-  content: {
-    color: colors.grey(),
-    fontFamily: fontType['Pjs-Medium'],
-    fontSize: 10,
-    lineHeight: 20,
-    marginTop: 15,
+  editText: { color: 'white', fontFamily: fontType['Pjs-Medium'] },
+  postList: { padding: 10 },
+  postImage: {
+    width: 100,
+    height: 100,
+    margin: 5,
+    borderRadius: 10,
   },
+  postContainer: {
+  position: 'relative', // Memastikan elemen anak bisa diatur posisinya
+  margin: 5,
+},
+menuButton: {
+  position: 'absolute', // Posisi absolut agar di atas gambar
+  top: 5,
+  right: 5,
+  backgroundColor: 'rgba(0, 0, 0, 0.6)', // Latar belakang transparan
+  padding: 5,
+  borderRadius: 20,
+  zIndex: 10, // Pastikan di atas elemen lainnya
+},
+menuIcon: {
+  color: 'white', // Warna ikon
+  fontSize: 16,
+  fontWeight: 'bold',
+},
+
 });
