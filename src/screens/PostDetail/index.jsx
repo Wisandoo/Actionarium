@@ -16,7 +16,7 @@ import { ArrowLeft, Like1, Receipt21, Message, Share } from 'iconsax-react-nativ
 import ActionSheet from 'react-native-actions-sheet';
 import { colors, fontType } from '../../theme';
 import axios from 'axios';
-import { doc, getFirestore, onSnapshot } from '@react-native-firebase/firestore';
+import { doc, getFirestore, onSnapshot,  deleteDoc } from '@react-native-firebase/firestore';
 
 const PostDetail = ({ route }) => {
   const { postId } = route.params;
@@ -34,44 +34,64 @@ const PostDetail = ({ route }) => {
   const openActionSheet = () => actionSheetRef.current?.show();
   const closeActionSheet = () => actionSheetRef.current?.hide();
 
-  useEffect(() => {
-    const db = getFirestore();
-    const postRef = doc(db, 'post', postId);
+ useEffect(() => {
+  const db = getFirestore();
+  const postRef = doc(db, 'blog', postId);
 
-    const unsub = onSnapshot(postRef, (snapshot) => {
-      const postData = snapshot.data();
-      if (postData) {
-        setSelectedPost(postData);
-      } else {
+  const unsub = onSnapshot(postRef, (snapshot) => {
+    const postData = snapshot.data();
+    if (postData) {
+      setSelectedPost(postData);
+    } else {
+      // Cegah alert jika memang kita sedang menghapus
+      if (!deletingRef.current) {
         Alert.alert('Error', 'Post not found.');
         navigation.goBack();
       }
-      setLoading(false);
-    });
+    }
+    setLoading(false);
+  });
 
-    return () => unsub();
-  }, [postId]);
+  return () => unsub();
+}, [postId]);
+
 
   const navigateEdit = () => {
     closeActionSheet();
     navigation.navigate('EditPost', { postId });
   };
 
+  const deletingRef = useRef(false);
+
   const handleDelete = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.delete(`https://682c9fb14fae188947534d0a.mockapi.io/api/Post/${postId}`);
-      if (response.status === 200) {
-        closeActionSheet();
-        navigation.goBack();
-        Alert.alert('Success', 'Post has been deleted.');
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Failed to delete the post.');
-    } finally {
-      setLoading(false);
+  closeActionSheet();
+  setLoading(true);
+  deletingRef.current = true;
+  try {
+    const db = getFirestore();
+    const blogRef = doc(db, 'blog', postId);
+    await blogRef.delete();
+
+    // Optional: delete from image backend
+    if (selectedPost?.image) {
+      await fetch(`https://backend-file-praktikum.vercel.app/delete/${selectedPost.image}`, {
+        method: 'POST',
+      });
     }
-  };
+
+    console.log('Post deleted!');
+    
+    Alert.alert('Success', 'Post deleted successfully.');
+    navigation.goBack();
+  } catch (error) {
+    console.error('Delete error:', error);
+    Alert.alert('Error', 'Failed to delete the post.');
+  } finally {
+    setLoading(false);
+    deletingRef.current = false;
+  }
+};
+
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const diffClampY = Animated.diffClamp(scrollY, 0, 52);
