@@ -1,18 +1,12 @@
-import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
-import React, { useState, useCallback, useEffect} from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, RefreshControl, ActivityIndicator } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Setting, Edit, Add } from 'iconsax-react-native';
 import FastImage from '@d11/react-native-fast-image';
-import { ProfileData, PictureList } from '../../data';
+import { ProfileData } from '../../data';
 import { fontType, colors } from '../../theme';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import axios from 'axios';
-
-const formatNumber = number => {
-  if (number >= 1_000_000_000) return (number / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
-  if (number >= 1_000_000) return (number / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
-  if (number >= 1_000) return (number / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
-  return number.toString();
-};
+import { collection, getFirestore, onSnapshot } from '@react-native-firebase/firestore';
+import { formatNumber } from '../../utils/formatNumber';
 
 const profileInfo = [
   { label: 'Posted', value: ProfileData.blogPosted },
@@ -22,15 +16,49 @@ const profileInfo = [
 
 const Profile = () => {
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(true);
+  const [blogData, setBlogData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const getDataBlog = () => {
+    const db = getFirestore();
+    const blogRef = collection(db, 'blog');
+
+    const subscriber = onSnapshot(blogRef, snapshot => {
+      const blogs = [];
+      snapshot.forEach(doc => {
+        blogs.push({
+          ...doc.data(),
+          id: doc.id,
+        });
+      });
+      setBlogData(blogs);
+      setLoading(false);
+    });
+
+    return subscriber;
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const unsubscribe = getDataBlog();
+      return () => unsubscribe(); // cleanup listener
+    }, [])
+  );
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      getDataBlog(); // Refresh via re-snapshot
+      setRefreshing(false);
+    }, 1500);
+  }, []);
 
   const renderHeader = () => (
     <>
-      {/* Header */}
       <View style={styles.header}>
         <Setting color={colors.orange()} variant="Linear" size={24} />
       </View>
-
-      {/* Profile Section */}
       <View style={styles.profileSection}>
         <FastImage
           style={styles.pic}
@@ -44,8 +72,6 @@ const Profile = () => {
         <Text style={styles.name}>{ProfileData.name}</Text>
         <Text style={styles.info}>Member since {ProfileData.createdAt}</Text>
       </View>
-
-      {/* Stats Section */}
       <View style={styles.statsContainer}>
         {profileInfo.map((stat, index) => (
           <View key={index} style={styles.statItem}>
@@ -54,41 +80,11 @@ const Profile = () => {
           </View>
         ))}
       </View>
-
-      {/* Edit Profile Button */}
       <TouchableOpacity style={styles.buttonEdit}>
         <Text style={styles.buttonText}>Edit Profile</Text>
       </TouchableOpacity>
     </>
   );
-
-  // status untuk menandakan apakah terjadi loading/tidak
-  const [loading, setLoading] = useState(true);
-  // state blod data untuk menyimpan list (array) dari blog
-  const [blogData, setBlogData] = useState([]);
-  // status untuk menyimpan status refreshing
-  const [refreshing, setRefreshing] = useState(false);
-  
-  const getDataBlog = async () => {
-    try {
-      // ambil data dari API dengan metode GET
-      const response = await axios.get(
-        'https://682c9fb14fae188947534d0a.mockapi.io/api/Post',
-      );
-      // atur state blogData sesuai dengan data yang
-      // di dapatkan dari API
-      setBlogData(response.data);
-      // atur loading menjadi false
-      setLoading(false)
-    } catch (error) {
-        console.error(error);
-    }
-  };
-
-  useFocusEffect(useCallback(() => {
-    getDataBlog();    
-  }));
-
 
   return (
     <View style={styles.container}>
@@ -99,28 +95,34 @@ const Profile = () => {
         ListHeaderComponent={renderHeader}
         columnWrapperStyle={{ justifyContent: 'space-between' }}
         renderItem={({ item }) => (
-        <TouchableOpacity
-          style={styles.imageContainer}
-          activeOpacity={0.8}
-          onPress={() =>
-          navigation.navigate('PostDetail', {
-            image: item.image,
-            caption: item.caption || '', // pastikan data ada
-            tags: item.tags || [], // bisa array kosong jika tidak ada
-            postId: item.id
-          })
-}
-
-        >
-          <FastImage
-            source={{ uri: item.image }}
-            style={styles.image}
-            resizeMode={FastImage.resizeMode.cover}
-          />
-        </TouchableOpacity>
-      )}
-
+          <TouchableOpacity
+            style={styles.imageContainer}
+            activeOpacity={0.8}
+            onPress={() =>
+              navigation.navigate('PostDetail', {
+                image: item.image,
+                caption: item.caption || '',
+                tags: item.tags || [],
+                postId: item.id
+              })
+            }
+          >
+            <FastImage
+              source={{ uri: item.image }}
+              style={styles.image}
+              resizeMode={FastImage.resizeMode.cover}
+            />
+          </TouchableOpacity>
+        )}
         contentContainerStyle={styles.scrollContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        ListFooterComponent={
+          loading ? (
+            <ActivityIndicator size="large" color={colors.orange()} style={{ marginTop: 20 }} />
+          ) : null
+        }
       />
 
       <TouchableOpacity
@@ -133,6 +135,7 @@ const Profile = () => {
 };
 
 export default Profile;
+
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.black() },

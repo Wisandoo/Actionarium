@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "456324819348",
+    "project_id": "actionarium",
+    "storage_bucket": "actionarium.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:456324819348:android:c8a39dda7c423a5b134781",
+        "android_client_info": {
+          "package_name": "com.woco"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC08HToqu0k78B7ybKA7F_Ni22ZBSyNt5M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
