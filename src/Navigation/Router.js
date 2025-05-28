@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Home, Searching, Profile, Details,PostDetail ,CreatePost} from '../screens';
+import {Home, Searching, Profile, EditPost,PostDetail ,CreatePost} from '../screens';
 import {Home2, Discover, ProfileCircle, AddCircle} from 'iconsax-react-native'; 
 import { fontType, colors } from '../theme';
 
@@ -83,8 +83,8 @@ const Router = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="Details"
-        component={Details}
+        name="EditPost"
+        component={EditPost}
         options={{
           headerShown: false, 
           animationEnabled: true,

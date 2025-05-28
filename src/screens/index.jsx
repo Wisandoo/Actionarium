@@ -1,7 +1,7 @@
 import Home from "./Home";
-import Details from "./Details";
+import EditPost from "./EditPost";
 import Profile from "./Profile";
 import Searching from "./Searching";
 import PostDetail from "./PostDetail";
 import CreatePost from "./CreatePost";
-export {Home, Profile, Searching, Details,PostDetail,CreatePost};
+export {Home, Profile, Searching, EditPost,PostDetail,CreatePost};

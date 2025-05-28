@@ -10,22 +10,34 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useBlog } from '../context/BlogContext';
+import { getFirestore, doc, getDoc, deleteDoc } from '@react-native-firebase/firestore';
 
 const ProfileDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { id } = route.params;
 
-  const { getBlogPost, deleteBlogPost } = useBlog();
   const [post, setPost] = useState(null);
 
   useEffect(() => {
-    const loadPost = async () => {
-      const fetchedPost = await getBlogPost(id);
-      setPost(fetchedPost);
+    const fetchPost = async () => {
+      try {
+        const db = getFirestore();
+        const docRef = doc(db, 'blog', id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setPost({ id: docSnap.id, ...docSnap.data() });
+        } else {
+          Alert.alert('Error', 'Post not found.');
+          navigation.goBack();
+        }
+      } catch (error) {
+        console.error('Error fetching post:', error);
+        Alert.alert('Error', 'Failed to load post.');
+      }
     };
-    loadPost();
+
+    fetchPost();
   }, [id]);
 
   const handleOptions = () => {
@@ -37,7 +49,7 @@ const ProfileDetail = () => {
       },
       (buttonIndex) => {
         if (buttonIndex === 1) {
-          navigation.navigate('EditProfileForm', { id }); // or EditBlogForm if shared
+          navigation.navigate('EditProfileForm', { id });
         } else if (buttonIndex === 2) {
           Alert.alert(
             'Delete Post',
@@ -48,8 +60,15 @@ const ProfileDetail = () => {
                 text: 'Delete',
                 style: 'destructive',
                 onPress: async () => {
-                  await deleteBlogPost(id);
-                  navigation.goBack();
+                  try {
+                    const db = getFirestore();
+                    await deleteDoc(doc(db, 'blog', id));
+                    Alert.alert('Success', 'Post deleted!');
+                    navigation.goBack();
+                  } catch (error) {
+                    console.error('Error deleting post:', error);
+                    Alert.alert('Error', 'Failed to delete post.');
+                  }
                 },
               },
             ]
